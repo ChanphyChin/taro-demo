@@ -12,6 +12,7 @@
             top: 0;
             right: 0;
             z-index: 999;
+            color: red;
             // visibility: hidden;
         }
         &__add {
@@ -23,7 +24,9 @@
             margin: 0 0 0 -20px;
             line-height: 40px;
             text-align: center;
-            @include border(top bottom left right, 1px, solid, blue);
+            color: #fff;
+            background: #6ec9ff;
+            @include border(top bottom left right, 2px, dashed, #6ec9ff);
             border-radius: 20px;
             // visibility: hidden;
         }

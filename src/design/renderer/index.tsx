@@ -2,6 +2,7 @@ import { Component } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Text } from '@tarojs/components';
 import cloneDeep from 'lodash/cloneDeep';
+import { IframeManager } from '../../services';
 
 import { Parser } from '../parser';
 import './index.scss';
@@ -63,25 +64,53 @@ export class Renderer extends Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
-      items: config,
+      postMessage: {
+        config: {
+          component: '',
+          config: ''
+        },
+        index: 0,
+        items: [
+          {
+            component: 'CustomerSwiper',
+            config: '{"list": [{"url": "", "pic": ""}]}',
+            id: 'a'
+          },
+          {
+            component: 'CustomerText',
+            config: '{"text": "this is text", "color": "#000", "fontSize": 20}',
+            id: 'b'
+          },
+          {
+            component: 'CustomerNav',
+            config: '{"list": [{"url": "", "title": "NAV"}, {"url": "", "title": "NAV1"}, {"url": "", "title": "NAV2"}], "rowCount": 3}',
+            id: 'c'
+          },
+        ],
+        type: 'edit'
+      },
       visible: []
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
   componentWillMount () {
-    window.addEventListener("message", this.receiveMessage, false);
+    IframeManager.subscrib(this.receiveMessage);
   }
 
   componentDidMount () { }
 
-  componentWillUnmount () { }
+  componentWillUnmount () {
+    IframeManager.unSubscrib();
+  }
 
   componentDidShow () { }
 
   componentDidHide () { }
 
   receiveMessage = (e: any) => {
-    console.log(e);
+    if(!e.data.config) return;
+    console.log(e.data);
+    this.setState({ postMessage: e.data });
   }
 
   onDragEnd = (result) => {
@@ -90,20 +119,17 @@ export class Renderer extends Component<any, any> {
       return;
     }
     const items = reorder(
-      this.state.items,
+      this.state.postMessage.items,
       result.source.index,
       result.destination.index
     );
     this.setState({
-      items
+      postMessage: {...this.state.postMessage, items}
     });
   }
 
   onDelete = (id: string) => {
-        const items = JSON.parse(JSON.stringify(this.state.items));
-        const index = items.findIndex(item => item.id === id);
-        items.splice(index, 1);
-        this.setState({ items });
+    
   }
 
   onAdd = (addType: string, index: number) => {
@@ -111,7 +137,7 @@ export class Renderer extends Component<any, any> {
       type: 'add',
       addType,
       index,
-      items: this.state.items
+      items: this.state.postMessage.items
     }
     window.parent.postMessage(message, "*");
   }
@@ -120,14 +146,14 @@ export class Renderer extends Component<any, any> {
 
   toggleVisible = (index: number, e) => {
     let preStatus = this.state.visible[index];
-    let visible = Array.from({ length: this.state.items.length }, () => false);
+    let visible = Array.from({ length: this.state.postMessage.items.length }, () => false);
     visible[index] = !preStatus;
     this.setState({ visible });
     const message = {
       type: 'edit',
       index,
-      items: this.state.items,
-      config: this.state.items[index]
+      items: this.state.postMessage.items,
+      config: this.state.postMessage.items[index]
     }
     window.parent.postMessage(message, "*");
   }
@@ -146,7 +172,7 @@ export class Renderer extends Component<any, any> {
               ref={provided.innerRef}
               style={getListStyle(snapshot.isDraggingOver)}
             >
-              {this.state.items.map((item, index) => (
+              {this.state.postMessage.items.map((item, index) => (
                 <Draggable draggableId={item.id} index={index} key={item.id}>
                   {(provided, snapshot) => (
                     <div

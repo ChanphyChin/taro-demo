@@ -19,7 +19,7 @@ export const CustomerText = (props: CustomerTextProps) => {
     }
     const { text, color, fontSize } = props.config;
     const style: CSSProperties = {
-      fontSize,
+      fontSize: `${fontSize}px`,
       color
     };
   return (
