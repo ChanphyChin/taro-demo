@@ -1,0 +1,37 @@
+
+@mixin border($dir, $width, $style, $color) {
+    border: 0 $style $color;
+    @each $d in $dir {
+      #{border-#{$d}-width}: $width;
+    }
+}
+.draggable-container {
+    &__oprator {
+        &__del {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 999;
+            // visibility: hidden;
+        }
+        &__add {
+            position: absolute;
+            left: 50%;
+            z-index: 999;
+            height: 40px;
+            width: 40px;
+            margin: 0 0 0 -20px;
+            line-height: 40px;
+            text-align: center;
+            @include border(top bottom left right, 1px, solid, blue);
+            border-radius: 20px;
+            // visibility: hidden;
+        }
+        &__add-pre {
+            top: -10px;
+        }
+        &__add-next {
+            bottom: -10px;
+        }
+    }
+}
