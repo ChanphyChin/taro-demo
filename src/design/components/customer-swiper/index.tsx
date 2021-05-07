@@ -26,7 +26,7 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
       return(
         <SwiperItem key={pic}>
           <View onClick={() => Taro.navigateTo({url})}>
-            <Image src={pic}/>
+            <Image src={pic} mode='scaleToFill'/>
           </View>
         </SwiperItem>
       );

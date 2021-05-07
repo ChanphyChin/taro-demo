@@ -10,7 +10,8 @@ import './index.scss'
 class Index extends Component<any, any> {
   componentWillMount () { }
 
-  componentDidMount () { }
+  componentDidMount () {
+  }
 
   componentWillUnmount () { }
 

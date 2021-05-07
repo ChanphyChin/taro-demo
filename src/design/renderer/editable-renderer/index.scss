@@ -13,7 +13,9 @@
             right: 0;
             z-index: 999;
             color: red;
-            // visibility: hidden;
+            &-del {
+                font-size: 20px;
+            }
         }
         &__add {
             position: absolute;
@@ -35,6 +37,9 @@
         }
         &__add-next {
             bottom: -10px;
+        }
+        &__icon {
+            font-size: 16px;
         }
     }
 }
