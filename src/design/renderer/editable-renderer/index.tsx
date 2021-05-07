@@ -30,7 +30,6 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
   // change background colour if dragging
   background: isDragging ? "lightgreen" : "white",
-
   // styles we need to apply on draggables
   ...draggableStyle
 });
