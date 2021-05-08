@@ -4,8 +4,8 @@ export interface MessageDataInterface {
       config: string;
     },
     index: number;
-    items: any[]; 
-    type: string;
+    items: any[];
+    pageType?: string;
 }
 export interface ComponentConfigInterface {
     [key: string]: any;

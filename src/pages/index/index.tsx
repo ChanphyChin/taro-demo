@@ -1,16 +1,28 @@
 import { Component } from 'react'
-import { observer, inject } from 'mobx-react'
 
+import { api, IframeManager } from '../../services';
+import { MessageDataInterface } from '../../types';
 import { Renderer } from '../../design';
 import './index.scss'
 
 
-@inject('store')
-@observer
 class Index extends Component<any, any> {
+  state = {
+    pageConfig: {}
+  }
   componentWillMount () { }
 
   componentDidMount () {
+    api.get({
+      apiPath: '/client/config',
+      params: {
+        pageType: 'home'
+      }
+    }).then((pageConfig: MessageDataInterface) => {
+      this.setState({ pageConfig });
+      pageConfig.config = { component: '', config: '' };
+      IframeManager.postMessage(pageConfig);
+    });
   }
 
   componentWillUnmount () { }
@@ -20,9 +32,9 @@ class Index extends Component<any, any> {
   componentDidHide () { }
 
   render () {
-    const { counterStore: { counter } } = this.props.store
+    const { pageConfig } = this.state;
     return (
-      <Renderer />
+      <Renderer pageConfig={pageConfig as MessageDataInterface}/>
     )
   }
 }

@@ -77,7 +77,6 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
             id: 'c'
           },
         ],
-        type: 'edit'
       },
       visible: []
     };
@@ -88,8 +87,12 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
   }
 
   componentDidMount () {
-      const { pageConfig } = this.props;
-      pageConfig && this.setState({ postMessage: pageConfig });
+      
+  }
+
+  componentWillReceiveProps(props) {
+    const { pageConfig } = props;
+    pageConfig && this.setState({ postMessage: pageConfig });
   }
 
   componentWillUnmount () {
@@ -158,6 +161,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
   }
 
   render () {
+      const { postMessage: { items = [] } } = this.state;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="droppable">
@@ -167,7 +171,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
               ref={provided.innerRef}
               style={getListStyle(snapshot.isDraggingOver)}
             >
-              {this.state.postMessage.items.map((item, index) => (
+              {items.map((item, index) => (
                 <Draggable draggableId={item.id} index={index} key={item.id}>
                   {(provided, snapshot) => (
                     <div
