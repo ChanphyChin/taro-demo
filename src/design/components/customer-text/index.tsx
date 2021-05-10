@@ -6,6 +6,7 @@ interface CustomerTextProps {
         url?: string;
         text: string;
         color: string;
+        textAlign: 'start' | 'end' | 'left' | 'right' | 'center' | 'justify' | 'match-parent';
         fontSize: number;
     }
 }
@@ -17,13 +18,13 @@ export const CustomerText = (props: CustomerTextProps) => {
             Taro.navigateTo({url});
         }
     }
-    const { text, color, fontSize } = props.config;
+    const { text, color, fontSize, textAlign } = props.config;
     const style: CSSProperties = {
       fontSize: `${fontSize}px`,
-      color
+      color,
     };
   return (
-    <div onClick={onClick}>
+    <div onClick={onClick} style={{ textAlign }}>
       <Text style={style}>{text}</Text>
     </div>
   );
