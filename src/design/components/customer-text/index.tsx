@@ -1,4 +1,4 @@
-import { Text } from '@tarojs/components';
+import { Text, View } from '@tarojs/components';
 import { CSSProperties } from 'react';
 
 interface CustomerTextProps {
@@ -24,8 +24,8 @@ export const CustomerText = (props: CustomerTextProps) => {
       color,
     };
   return (
-    <div onClick={onClick} style={{ textAlign }}>
+    <View onClick={onClick} style={{ textAlign }}>
       <Text style={style}>{text}</Text>
-    </div>
+    </View>
   );
 }

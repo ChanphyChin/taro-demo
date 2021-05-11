@@ -37,7 +37,7 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
   }
   console.log(props);
   return (
-    <div>
+    <View>
       <Swiper
         className='test-h'
         indicatorColor='#999'
@@ -48,6 +48,6 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
       >
         {renderSwiperItem()}
       </Swiper>
-    </div>
+    </View>
   );
 }
