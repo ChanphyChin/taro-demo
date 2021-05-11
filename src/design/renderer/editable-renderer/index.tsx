@@ -2,6 +2,7 @@ import { Component, MouseEvent } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { View } from '@tarojs/components';
 import { ITouchEvent } from '@tarojs/components/types/common';
+import cloneDeep from 'lodash/cloneDeep';
 
 import { IframeManager } from '../../../services';
 import { MessageDataInterface } from '../../../types';
@@ -68,7 +69,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
           },
           {
             component: 'CustomerText',
-            config: '{"text": "this is text", "color": "#000", "fontSize": 20}',
+            config: '{"text": "this is text", "color": "#000", "fontSize": 20, "textAlign": "left"}',
             id: 'b'
           },
           {
@@ -105,7 +106,6 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
 
   receiveMessage = (e: any) => {
     if(!e.data.config) return;
-    console.log(e.data);
     this.setState({ postMessage: e.data });
   }
 
@@ -124,8 +124,11 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
     });
   }
 
-  onDelete = (id: string) => {
-    
+  onDelete = (index: number) => {
+      const postMessage = cloneDeep(this.state.postMessage);
+      postMessage.items.splice(index, 1);
+      this.setState({ postMessage });
+      window.parent.postMessage(postMessage, "*");
   }
 
   onAdd = (addType: string, index: number, e: ITouchEvent) => {
@@ -142,7 +145,6 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
   visible: Boolean[] = [];
 
   toggleVisible = (index: number, e: MouseEvent) => {
-    console.log(e);
     let preStatus = this.state.visible[index];
     let visible = Array.from({ length: this.state.postMessage.items.length }, () => false);
     visible[index] = !preStatus;
@@ -188,7 +190,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
                       <View
                         style={{ visibility: this.state.visible[index] ? 'visible' : 'hidden' }}
                         className='draggable-container__oprator__del'
-                        onClick={() => this.onDelete(item.id)}
+                        onClick={() => this.onDelete(index)}
                       >
                         <View className='at-icon at-icon-trash draggable-container__oprator__icon-del'></View>
                       </View>

@@ -5,9 +5,12 @@ import swiperImg from '../../../static/images/1.jpg';
 
 interface CustomerSwiperProps {
   config: {
-    list: {
+    items: {
       url: string;
-      pic: string;
+      linkInfo: {
+        name: string;
+        url: string;
+      };
     }[];
   };
 }
@@ -20,21 +23,19 @@ const defaultList = [
 
 export const CustomerSwiper = (props: CustomerSwiperProps) => {
   const renderSwiperItem = () => {
-    // const { list } = props;
-    return defaultList.map(item => {
-      const { url, pic } = item;
+    const { config: { items = [] } } = props;
+    return items.map(item => {
+      const { url, linkInfo } = item;
       return(
-        <SwiperItem key={pic}>
-          <View onClick={() => Taro.navigateTo({url})}>
-            <Image src={pic} mode='scaleToFill'/>
+        <SwiperItem key={url}>
+          <View onClick={() => Taro.navigateTo({url: linkInfo.url})}>
+            <Image src={url} mode='scaleToFill'/>
           </View>
         </SwiperItem>
       );
     });
   }
-  // if(!props.list.length) {
-  //   return null;
-  // }
+  console.log(props);
   return (
     <div>
       <Swiper
