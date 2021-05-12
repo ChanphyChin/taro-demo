@@ -1,50 +1,29 @@
-import { ScrollView, View } from '@tarojs/components';
-import chunk from 'lodash/chunk';
-import map from 'lodash/map';
+import { AtTabs } from 'taro-ui'
+import { useState } from 'react';
+import Taro from '@tarojs/taro';
 
 interface CustomerNavProps {
   config: {
-    list: {
-      url: string;
+    tabList: {
       title: string;
+      linkInfo: {
+        url: string;
+        name: string;
+      };
     }[];
-    /**
-     * 每行显示多少个标题
-     */
-    rowCount: number; 
   }
 }
 
 export const CustomerNav = (props: CustomerNavProps) => {
-  const renderNav = () => {
-    const { config: { list, rowCount } } = props;
-    return(
-      <View>
-        {map(chunk(list, rowCount), chunkList => {
-          return (
-            <View style={{ display: 'flex', width: `${chunkList.length * 100}px`}} key={JSON.stringify(chunkList)}>
-              {chunkList.map(item => {
-                return(
-                  <View key={item.title} style={{ flex: 1, textAlign: 'center' }}>
-                      <View style={{ flex: 1 }}>{item.title}</View>
-                  </View>
-                );
-              })}
-            </View>
-          );
-        })}
-      </View>
-    );
+  const [current, setCurrent] = useState<number>(0);
+  const onTabsClick = (current: number) => {
+    const { linkInfo } = tabList[current];
+    Taro.navigateTo({url: linkInfo.url});
+    setCurrent(current);
   }
-  const { config: { list, rowCount } } = props;
+
+  const tabList = props.config.tabList;
   return (
-    <ScrollView
-      className='scrollview'
-      scrollX
-      scrollWithAnimation
-      style={{ height: `${Math.ceil(list.length / rowCount)*35}px`, }}
-    >
-      {renderNav()}
-    </ScrollView>
-  );
+    <AtTabs current={current} tabList={tabList} onClick={onTabsClick} scroll></AtTabs>
+  )
 }

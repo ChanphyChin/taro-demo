@@ -1,8 +1,6 @@
 import { Swiper, SwiperItem, Image, View } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 
-import swiperImg from '../../../static/images/1.jpg';
-
 interface CustomerSwiperProps {
   config: {
     items: {
@@ -14,12 +12,6 @@ interface CustomerSwiperProps {
     }[];
   };
 }
-const defaultList = [
-  {
-    url: '/',
-    pic: swiperImg
-  }
-]
 
 export const CustomerSwiper = (props: CustomerSwiperProps) => {
   const renderSwiperItem = () => {
@@ -35,7 +27,6 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
       );
     });
   }
-  console.log(props);
   return (
     <View>
       <Swiper

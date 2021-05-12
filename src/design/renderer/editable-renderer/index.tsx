@@ -126,6 +126,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
 
   onDelete = (index: number) => {
       const postMessage = cloneDeep(this.state.postMessage);
+      postMessage.type = 'add';
       postMessage.items.splice(index, 1);
       this.setState({ postMessage });
       window.parent.postMessage(postMessage, "*");
@@ -174,7 +175,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
               style={getListStyle(snapshot.isDraggingOver)}
             >
               {items.map((item, index) => (
-                <Draggable draggableId={item.id} index={index} key={item.id}>
+                <Draggable draggableId={`${item.config}-${index}`} index={index} key={`${item.config}-${index}`}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
