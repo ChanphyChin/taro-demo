@@ -7,7 +7,7 @@ export const DisplayRenderer = (props: { pageConfig: MessageDataInterface }) => 
         return (
             <div>
             {items.map(item => {
-                return <Parser config={item.config} component={item.component}/>
+                return <Parser config={item.config} component={item.component} key={item.config}/>
             })}
             </div>
         );

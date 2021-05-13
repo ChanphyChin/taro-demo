@@ -1,6 +1,6 @@
 import { Component, MouseEvent } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { View } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import { ITouchEvent } from '@tarojs/components/types/common';
 import cloneDeep from 'lodash/cloneDeep';
 
@@ -61,23 +61,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
           config: ''
         },
         index: 0,
-        items: [
-          {
-            component: 'CustomerSwiper',
-            config: '{"list": [{"url": "", "pic": ""}]}',
-            id: 'a'
-          },
-          {
-            component: 'CustomerText',
-            config: '{"text": "this is text", "color": "#000", "fontSize": 20, "textAlign": "left"}',
-            id: 'b'
-          },
-          {
-            component: 'CustomerNav',
-            config: '{"list": [{"url": "", "title": "NAV"}, {"url": "", "title": "NAV1"}, {"url": "", "title": "NAV2"}], "rowCount": 3}',
-            id: 'c'
-          },
-        ],
+        items: [],
       },
       visible: []
     };
@@ -164,7 +148,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
   }
 
   render () {
-      const { postMessage: { items = [] } } = this.state;
+      const { postMessage: { items = [], type } } = this.state;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="droppable">
@@ -210,7 +194,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
                       >
                         <View className='at-icon at-icon-add draggable-container__oprator__icon'></View>
                       </View>
-                      <Parser config={item.config} component={item.component}/>
+                      <Parser config={item.config} component={item.component} disabled={true}/>
                     </div>
                   )}
               </Draggable>

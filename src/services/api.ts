@@ -61,7 +61,6 @@ export const api: Api = {
                 case METHOD_DELETE:
                     break;
                 default:
-                    console.log(params);
                     req = req.send(params);
                     break;
             }
@@ -93,7 +92,6 @@ export const api: Api = {
         return api
             .request(config)
             .then((response: any) => {
-                console.log(response);
                 return response.body;
             })
             .catch(errorHandle);
