@@ -201,7 +201,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
                       >
                         <View className='at-icon at-icon-add draggable-container__oprator__icon'></View>
                       </View>
-                      <Parser config={item.config} component={item.component} disabled={true}/>
+                      <Parser config={item.config} component={item.component} isEdit={true}/>
                     </div>
                   )}
               </Draggable>

@@ -13,7 +13,7 @@ interface CustomerSwiperProps {
       };
     }[];
   };
-  disabled: Boolean;
+  isEdit: Boolean;
 }
 
 export const CustomerSwiper = (props: CustomerSwiperProps) => {
@@ -24,13 +24,23 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
       return(
         <SwiperItem key={url}>
           <View onClick={() => {
-            !props.disabled && Taro.navigateTo({url: linkInfo.url});
+            !props.isEdit && Taro.navigateTo({url: linkInfo.url});
           }}>
             <Image src={url} mode='scaleToFill'/>
           </View>
         </SwiperItem>
       );
     });
+  }
+  if(!props.config.items.length && props.isEdit) {
+    return(
+      <View>
+        <Text style={{ fontSize: 16, color: 'rgb(202 202 202)' }}>点击编辑Swiper</Text>
+      </View>
+    );
+  }
+  if(!props.config.items.length && !props.isEdit) {
+    return null;
   }
   return (
     <View>

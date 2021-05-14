@@ -15,7 +15,7 @@ interface CustomerNavProps {
       };
     }[];
   };
-  disabled: Boolean;
+  isEdit: Boolean;
 }
 
 export class CustomerNav extends Component<CustomerNavProps> {
@@ -24,9 +24,9 @@ export class CustomerNav extends Component<CustomerNavProps> {
     tabList: this.props.config.tabList,
   }
   onTabsClick = (current: number) => {
-    const { disabled, config: { tabList } } = this.props;
+    const { isEdit, config: { tabList } } = this.props;
     const { linkInfo } = tabList[current];
-    !disabled && Taro.redirectTo({url: linkInfo.url});
+    !isEdit && Taro.redirectTo({url: linkInfo.url});
     this.setCurrent(current);
   }
 
@@ -37,19 +37,25 @@ export class CustomerNav extends Component<CustomerNavProps> {
   componentDidMount() {
     const path = Taro.getCurrentInstance().router?.path;
     const search = path?.split('?')[1];
-    const page = getQueryVariable(search as string).page;
-    this.props.config.tabList.forEach((item, index) => {
-      const { linkInfo: { name } } = item;
-      if(page === name) {
-        this.setCurrent(index);
-      }
-    });
+    if(search) {
+      const page = getQueryVariable(search as string).page;
+      this.props.config.tabList.forEach((item, index) => {
+        const { linkInfo: { name } } = item;
+        if(page === name) {
+          this.setCurrent(index);
+        }
+      });
+    }
   }
 
   render() {
     const { current, tabList } = this.state;
-    if(!tabList.length) {
+    const { isEdit } = this.props;
+    if(!tabList.length && isEdit) {
       return <Text style={{ fontSize: 16, color: 'rgb(202 202 202)' }}>点击编辑Nav</Text>;
+    }
+    if(!tabList.length && !isEdit) {
+      return null;
     }
     return (
       <AtTabs current={current} tabList={tabList} onClick={this.onTabsClick} scroll></AtTabs>

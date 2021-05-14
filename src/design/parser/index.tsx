@@ -3,20 +3,20 @@ import { CustomerSwiper, CustomerText, CustomerNav, CustomerBanner } from '../co
 interface ParserProps {
   component: string;
   config: string;
-  disabled?: Boolean;
+  isEdit?: Boolean;
 }
 
 export const Parser = (props: ParserProps) => {
   const config = JSON.parse(props.config);
   switch (props.component) {
     case 'CustomerSwiper': 
-      return <CustomerSwiper config={config} disabled={props.disabled as Boolean} />;
+      return <CustomerSwiper config={config} isEdit={props.isEdit as Boolean} />;
     case 'CustomerText' :
-      return <CustomerText config={config} />;
+      return <CustomerText config={config} isEdit={props.isEdit as Boolean} />;
     case 'CustomerNav' :
-      return <CustomerNav config={config} disabled={props.disabled as Boolean} />
+      return <CustomerNav config={config} isEdit={props.isEdit as Boolean} />
     case 'CustomerBanner' :
-      return <CustomerBanner config={config} disabled={props.disabled as Boolean} />
+      return <CustomerBanner config={config} isEdit={props.isEdit as Boolean} />
   }
   return null;
 }
