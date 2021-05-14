@@ -94,6 +94,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
   }
 
   onDragEnd = (result) => {
+    console.log(2);
     // dropped outside the list
     if (!result.destination) {
       return;
@@ -106,6 +107,12 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
     this.setState({
       postMessage: {...this.state.postMessage, items}
     });
+  }
+
+  onDragStart = (e) => {
+    console.log('onDragStart');
+    console.log(e);
+    // e.stopPropagation();
   }
 
   onDelete = (index: number) => {
@@ -150,7 +157,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
   render () {
       const { postMessage: { items = [], type } } = this.state;
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
+      <DragDropContext onDragEnd={this.onDragEnd} >
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
             <div
@@ -159,7 +166,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
               style={getListStyle(snapshot.isDraggingOver)}
             >
               {items.map((item, index) => (
-                <Draggable draggableId={`${item.config}-${index}`} index={index} key={`${item.config}-${index}`}>
+                <Draggable  onTouchStart={this.onDragStart} draggableId={`${item.config}-${index}`} index={index} key={`${item.config}-${index}`}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}

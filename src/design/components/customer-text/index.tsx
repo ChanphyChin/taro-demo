@@ -25,6 +25,9 @@ export const CustomerText = (props: CustomerTextProps) => {
     };
   return (
     <View onClick={onClick} style={{ textAlign }}>
+      {JSON.stringify(props.config) === '{}' && (
+          <Text style={{ fontSize: 16, color: 'rgb(202 202 202)' }}>点击编辑Text</Text>
+      )}
       <Text style={style}>{text}</Text>
     </View>
   );

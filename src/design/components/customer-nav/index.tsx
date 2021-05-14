@@ -1,7 +1,7 @@
-import { AtTabs } from 'taro-ui'
-import { useState, useEffect } from 'react';
-import Taro, { render } from '@tarojs/taro';
+import { AtTabs, } from 'taro-ui'
+import Taro from '@tarojs/taro';
 import { Component } from 'react';
+import { Text } from '@tarojs/components';
 
 import { getQueryVariable } from '../../../services';
 
@@ -48,6 +48,9 @@ export class CustomerNav extends Component<CustomerNavProps> {
 
   render() {
     const { current, tabList } = this.state;
+    if(!tabList.length) {
+      return <Text style={{ fontSize: 16, color: 'rgb(202 202 202)' }}>点击编辑Nav</Text>;
+    }
     return (
       <AtTabs current={current} tabList={tabList} onClick={this.onTabsClick} scroll></AtTabs>
     )

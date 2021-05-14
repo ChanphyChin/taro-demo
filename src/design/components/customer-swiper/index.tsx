@@ -1,5 +1,7 @@
-import { Swiper, SwiperItem, Image, View } from '@tarojs/components';
+import { Swiper, SwiperItem, Image, View, Text } from '@tarojs/components';
 import Taro from '@tarojs/taro';
+
+import './index.scss';
 
 interface CustomerSwiperProps {
   config: {
@@ -11,6 +13,7 @@ interface CustomerSwiperProps {
       };
     }[];
   };
+  disabled: Boolean;
 }
 
 export const CustomerSwiper = (props: CustomerSwiperProps) => {
@@ -20,7 +23,9 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
       const { url, linkInfo } = item;
       return(
         <SwiperItem key={url}>
-          <View onClick={() => Taro.navigateTo({url: linkInfo.url})}>
+          <View onClick={() => {
+            !props.disabled && Taro.navigateTo({url: linkInfo.url});
+          }}>
             <Image src={url} mode='scaleToFill'/>
           </View>
         </SwiperItem>
@@ -29,8 +34,11 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
   }
   return (
     <View>
+      {!props.config.items.length && (
+          <Text style={{ fontSize: 16, color: 'rgb(202 202 202)' }}>点击编辑Swiper</Text>
+      )}
       <Swiper
-        className='test-h'
+        className='customer-swiper'
         indicatorColor='#999'
         indicatorActiveColor='#333'
         circular
