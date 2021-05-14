@@ -23,10 +23,13 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
       const { url, linkInfo } = item;
       return(
         <SwiperItem key={url}>
-          <View onClick={() => {
-            !props.isEdit && Taro.navigateTo({url: linkInfo.url});
-          }}>
-            <Image src={url} mode='scaleToFill'/>
+          <View
+            onClick={() => {
+              !props.isEdit && Taro.navigateTo({url: linkInfo.url});
+            }}
+            style={{ textAlign: 'center' }}
+          >
+            <Image src={url} mode='aspectFit'/>
           </View>
         </SwiperItem>
       );
