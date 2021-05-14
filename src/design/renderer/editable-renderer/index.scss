@@ -30,7 +30,9 @@
             background: #6ec9ff;
             @include border(top bottom left right, 2px, dashed, #6ec9ff);
             border-radius: 20px;
-            // visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-items: center;
         }
         &__add-pre {
             top: -10px;
@@ -40,6 +42,7 @@
         }
         &__icon {
             font-size: 16px;
+            flex: 1;
         }
     }
 }

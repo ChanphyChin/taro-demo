@@ -27,9 +27,9 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
             onClick={() => {
               !props.isEdit && Taro.navigateTo({url: linkInfo.url});
             }}
-            style={{ textAlign: 'center' }}
+            style={{ textAlign: 'center', display: 'flex', justifyItems: 'center', alignItems: 'center' }}
           >
-            <Image src={url} mode='aspectFit'/>
+            <Image style={{ flex: 1 }} src={url} mode='aspectFit'/>
           </View>
         </SwiperItem>
       );
