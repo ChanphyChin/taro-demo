@@ -94,7 +94,6 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
   }
 
   onDragEnd = (result) => {
-    console.log(2);
     // dropped outside the list
     if (!result.destination) {
       return;
