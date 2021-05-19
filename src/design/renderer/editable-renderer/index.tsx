@@ -1,7 +1,8 @@
 import { Component, MouseEvent } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { View } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import { ITouchEvent } from '@tarojs/components/types/common';
+import cloneDeep from 'lodash/cloneDeep';
 
 import { IframeManager } from '../../../services';
 import { MessageDataInterface } from '../../../types';
@@ -60,24 +61,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
           config: ''
         },
         index: 0,
-        items: [
-          {
-            component: 'CustomerSwiper',
-            config: '{"list": [{"url": "", "pic": ""}]}',
-            id: 'a'
-          },
-          {
-            component: 'CustomerText',
-            config: '{"text": "this is text", "color": "#000", "fontSize": 20}',
-            id: 'b'
-          },
-          {
-            component: 'CustomerNav',
-            config: '{"list": [{"url": "", "title": "NAV"}, {"url": "", "title": "NAV1"}, {"url": "", "title": "NAV2"}], "rowCount": 3}',
-            id: 'c'
-          },
-        ],
-        type: 'edit'
+        items: [],
       },
       visible: []
     };
@@ -88,8 +72,12 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
   }
 
   componentDidMount () {
-      const { pageConfig } = this.props;
-      pageConfig && this.setState({ postMessage: pageConfig });
+      
+  }
+
+  componentWillReceiveProps(props) {
+    const { pageConfig } = props;
+    pageConfig && this.setState({ postMessage: pageConfig });
   }
 
   componentWillUnmount () {
@@ -102,7 +90,6 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
 
   receiveMessage = (e: any) => {
     if(!e.data.config) return;
-    console.log(e.data);
     this.setState({ postMessage: e.data });
   }
 
@@ -121,8 +108,18 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
     });
   }
 
-  onDelete = (id: string) => {
-    
+  onDragStart = (e) => {
+    console.log('onDragStart');
+    console.log(e);
+    // e.stopPropagation();
+  }
+
+  onDelete = (index: number) => {
+      const postMessage = cloneDeep(this.state.postMessage);
+      postMessage.type = 'add';
+      postMessage.items.splice(index, 1);
+      this.setState({ postMessage });
+      window.parent.postMessage(postMessage, "*");
   }
 
   onAdd = (addType: string, index: number, e: ITouchEvent) => {
@@ -139,7 +136,6 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
   visible: Boolean[] = [];
 
   toggleVisible = (index: number, e: MouseEvent) => {
-    console.log(e);
     let preStatus = this.state.visible[index];
     let visible = Array.from({ length: this.state.postMessage.items.length }, () => false);
     visible[index] = !preStatus;
@@ -158,8 +154,9 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
   }
 
   render () {
+      const { postMessage: { items = [], type } } = this.state;
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
+      <DragDropContext onDragEnd={this.onDragEnd} >
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
             <div
@@ -167,8 +164,8 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
               ref={provided.innerRef}
               style={getListStyle(snapshot.isDraggingOver)}
             >
-              {this.state.postMessage.items.map((item, index) => (
-                <Draggable draggableId={item.id} index={index} key={item.id}>
+              {items.map((item, index) => (
+                <Draggable  onTouchStart={this.onDragStart} draggableId={`${item.config}-${index}`} index={index} key={`${item.config}-${index}`}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
@@ -184,7 +181,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
                       <View
                         style={{ visibility: this.state.visible[index] ? 'visible' : 'hidden' }}
                         className='draggable-container__oprator__del'
-                        onClick={() => this.onDelete(item.id)}
+                        onClick={() => this.onDelete(index)}
                       >
                         <View className='at-icon at-icon-trash draggable-container__oprator__icon-del'></View>
                       </View>
@@ -203,7 +200,7 @@ export class EditableRenderer extends Component<EditableRendererProps, EditableR
                       >
                         <View className='at-icon at-icon-add draggable-container__oprator__icon'></View>
                       </View>
-                      <Parser config={item.config} component={item.component}/>
+                      <Parser config={item.config} component={item.component} isEdit={true}/>
                     </div>
                   )}
               </Draggable>

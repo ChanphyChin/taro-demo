@@ -1,44 +1,57 @@
-import { Swiper, SwiperItem, Image, View } from '@tarojs/components';
+import { Swiper, SwiperItem, Image, View, Text } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 
-import swiperImg from '../../../static/images/1.jpg';
+import './index.scss';
 
 interface CustomerSwiperProps {
   config: {
-    list: {
+    items: {
       url: string;
-      pic: string;
+      linkInfo: {
+        name: string;
+        url: string;
+      };
     }[];
   };
+  isEdit: Boolean;
 }
-const defaultList = [
-  {
-    url: '/',
-    pic: swiperImg
-  }
-]
 
 export const CustomerSwiper = (props: CustomerSwiperProps) => {
   const renderSwiperItem = () => {
-    // const { list } = props;
-    return defaultList.map(item => {
-      const { url, pic } = item;
+    const { config: { items = [] } } = props;
+    return items.map(item => {
+      const { url, linkInfo } = item;
       return(
-        <SwiperItem key={pic}>
-          <View onClick={() => Taro.navigateTo({url})}>
-            <Image src={pic} mode='scaleToFill'/>
+        <SwiperItem key={url}>
+          <View
+            onClick={() => {
+              !props.isEdit && Taro.navigateTo({url: linkInfo.url});
+            }}
+            style={{ textAlign: 'center', display: 'flex', justifyItems: 'center', alignItems: 'center' }}
+          >
+            <Image style={{ flex: 1 }} src={url} mode='aspectFit'/>
           </View>
         </SwiperItem>
       );
     });
   }
-  // if(!props.list.length) {
-  //   return null;
-  // }
+  if(!props.config.items.length && props.isEdit) {
+    return(
+      <View>
+        <Text style={{ fontSize: 16, color: 'rgb(202 202 202)' }}>点击编辑Swiper</Text>
+      </View>
+    );
+  }
+  if(!props.config.items.length && !props.isEdit) {
+    return null;
+  }
   return (
-    <div>
+    <View>
+      {!props.config.items.length && (
+          <Text style={{ fontSize: 16, color: 'rgb(202 202 202)' }}>点击编辑Swiper</Text>
+      )}
       <Swiper
-        className='test-h'
+        className='customer-swiper'
         indicatorColor='#999'
         indicatorActiveColor='#333'
         circular
@@ -47,6 +60,6 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
       >
         {renderSwiperItem()}
       </Swiper>
-    </div>
+    </View>
   );
 }

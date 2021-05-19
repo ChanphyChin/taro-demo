@@ -1,50 +1,64 @@
-import { ScrollView, View } from '@tarojs/components';
-import chunk from 'lodash/chunk';
-import map from 'lodash/map';
+import { AtTabs, } from 'taro-ui'
+import Taro from '@tarojs/taro';
+import { Component } from 'react';
+import { Text } from '@tarojs/components';
+
+import { getQueryVariable } from '../../../services';
 
 interface CustomerNavProps {
   config: {
-    list: {
-      url: string;
+    tabList: {
       title: string;
+      linkInfo: {
+        url: string;
+        name: string;
+      };
     }[];
-    /**
-     * 每行显示多少个标题
-     */
-    rowCount: number; 
-  }
+  };
+  isEdit: Boolean;
 }
 
-export const CustomerNav = (props: CustomerNavProps) => {
-  const renderNav = () => {
-    const { config: { list, rowCount } } = props;
-    return(
-      <View>
-        {map(chunk(list, rowCount), chunkList => {
-          return (
-            <View style={{ display: 'flex', width: `${chunkList.length * 100}px`}} key={JSON.stringify(chunkList)}>
-              {chunkList.map(item => {
-                return(
-                  <View key={item.title} style={{ flex: 1, textAlign: 'center' }}>
-                      <View style={{ flex: 1 }}>{item.title}</View>
-                  </View>
-                );
-              })}
-            </View>
-          );
-        })}
-      </View>
-    );
+export class CustomerNav extends Component<CustomerNavProps> {
+  state = {
+    current: 0,
+    tabList: this.props.config.tabList,
   }
-  const { config: { list, rowCount } } = props;
-  return (
-    <ScrollView
-      className='scrollview'
-      scrollX
-      scrollWithAnimation
-      style={{ height: `${Math.ceil(list.length / rowCount)*35}px`, }}
-    >
-      {renderNav()}
-    </ScrollView>
-  );
+  onTabsClick = (current: number) => {
+    const { isEdit, config: { tabList } } = this.props;
+    const { linkInfo } = tabList[current];
+    !isEdit && Taro.redirectTo({url: linkInfo.url});
+    this.setCurrent(current);
+  }
+
+  setCurrent = (current: number) => {
+    this.setState({ current });
+  }
+
+  componentDidMount() {
+    const path = Taro.getCurrentInstance().router?.path;
+    const search = path?.split('?')[1];
+    if(search) {
+      const page = getQueryVariable(search as string).page;
+      this.props.config.tabList.forEach((item, index) => {
+        const { linkInfo: { name } } = item;
+        if(page === name) {
+          this.setCurrent(index);
+        }
+      });
+    }
+  }
+
+  render() {
+    const { current, tabList } = this.state;
+    const { isEdit } = this.props;
+    if(!tabList.length && isEdit) {
+      return <Text style={{ fontSize: 16, color: 'rgb(202 202 202)' }}>点击编辑Nav</Text>;
+    }
+    if(!tabList.length && !isEdit) {
+      return null;
+    }
+    return (
+      <AtTabs current={current} tabList={tabList} onClick={this.onTabsClick} scroll></AtTabs>
+    )
+  }
 }

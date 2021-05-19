@@ -1,5 +1,4 @@
 import { Component } from 'react'
-import Taro from '@tarojs/taro';
 
 import { api, IframeManager } from '../../services';
 import { MessageDataInterface } from '../../types';
@@ -17,14 +16,12 @@ class Index extends Component<any, any> {
     api.get({
       apiPath: '/client/config',
       params: {
-        pageType: Taro.Current.router?.params.page || 'home'
+        pageType: 'home'
       }
     }).then((pageConfig: MessageDataInterface) => {
-      if(pageConfig) {
-        this.setState({ pageConfig });
-        pageConfig.config = { component: '', config: '' };
-        IframeManager.postMessage(pageConfig);
-      }
+      this.setState({ pageConfig });
+      pageConfig.config = { component: '', config: '' };
+      IframeManager.postMessage(pageConfig);
     });
   }
 
