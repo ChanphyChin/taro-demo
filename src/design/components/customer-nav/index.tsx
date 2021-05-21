@@ -7,7 +7,7 @@ import { getQueryVariable } from '../../../services';
 
 interface CustomerNavProps {
   config: {
-    tabList: {
+    items: {
       title: string;
       linkInfo: {
         url: string;
@@ -21,11 +21,11 @@ interface CustomerNavProps {
 export class CustomerNav extends Component<CustomerNavProps> {
   state = {
     current: 0,
-    tabList: this.props.config.tabList,
+    items: this.props.config.items,
   }
   onTabsClick = (current: number) => {
-    const { isEdit, config: { tabList } } = this.props;
-    const { linkInfo } = tabList[current];
+    const { isEdit, config: { items } } = this.props;
+    const { linkInfo } = items[current];
     !isEdit && Taro.redirectTo({url: linkInfo.url});
     this.setCurrent(current);
   }
@@ -38,8 +38,9 @@ export class CustomerNav extends Component<CustomerNavProps> {
     const path = Taro.getCurrentInstance().router?.path;
     const search = path?.split('?')[1];
     if(search) {
+      const { config: { items = [] } } = this.props;
       const page = getQueryVariable(search as string).page;
-      this.props.config.tabList.forEach((item, index) => {
+      items.forEach((item, index) => {
         const { linkInfo: { name } } = item;
         if(page === name) {
           this.setCurrent(index);
@@ -49,16 +50,16 @@ export class CustomerNav extends Component<CustomerNavProps> {
   }
 
   render() {
-    const { current, tabList } = this.state;
+    const { current, items = [] } = this.state;
     const { isEdit } = this.props;
-    if(!tabList.length && isEdit) {
+    if(!items.length && isEdit) {
       return <Text style={{ fontSize: 16, color: 'rgb(202 202 202)' }}>点击编辑Nav</Text>;
     }
-    if(!tabList.length && !isEdit) {
+    if(!items.length && !isEdit) {
       return null;
     }
     return (
-      <AtTabs current={current} tabList={tabList} onClick={this.onTabsClick} scroll></AtTabs>
+      <AtTabs current={current} tabList={items} onClick={this.onTabsClick} scroll></AtTabs>
     )
   }
 }

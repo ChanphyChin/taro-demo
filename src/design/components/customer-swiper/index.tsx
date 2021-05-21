@@ -6,7 +6,7 @@ import './index.scss';
 interface CustomerSwiperProps {
   config: {
     items: {
-      url: string;
+      imgInfo: {url: string; name:string;};
       linkInfo: {
         name: string;
         url: string;
@@ -20,16 +20,16 @@ export const CustomerSwiper = (props: CustomerSwiperProps) => {
   const renderSwiperItem = () => {
     const { config: { items = [] } } = props;
     return items.map(item => {
-      const { url, linkInfo } = item;
+      const { imgInfo, linkInfo } = item;
       return(
-        <SwiperItem key={url}>
+        <SwiperItem key={imgInfo?.url}>
           <View
             onClick={() => {
-              !props.isEdit && Taro.navigateTo({url: linkInfo.url});
+              !props.isEdit && Taro.navigateTo({url: linkInfo?.url});
             }}
             style={{ textAlign: 'center', display: 'flex', justifyItems: 'center', alignItems: 'center' }}
           >
-            <Image style={{ flex: 1 }} src={url} mode='aspectFit'/>
+            <Image style={{ flex: 1 }} src={imgInfo?.url} mode='aspectFit'/>
           </View>
         </SwiperItem>
       );
